@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.9",
   "info": {
     "title": "Whistl API for WMS integration",
     "description": "",
@@ -103,7 +103,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProductUpdateAPI"
+                "$ref": "#/components/schemas/ProductAPI"
               }
             }
           }
@@ -307,7 +307,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/OrderUpdateAPI"
+                "$ref": "#/components/schemas/OrderAPI"
               }
             }
           }
@@ -478,7 +478,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/OrderLineStatusUpdateAPI"
+                "$ref": "#/components/schemas/OrderLineStatusUpdateDTO"
               }
             }
           }
@@ -541,7 +541,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/StockSearchDTO"
+                "$ref": "#/components/schemas/StockDTO"
               }
             }
           }
@@ -604,7 +604,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/StockTransactionsSearchDTO"
+                "$ref": "#/components/schemas/StockTransactionsDTO"
               }
             }
           }
@@ -763,106 +763,124 @@
         }
       },
       "OrderAPI": {
-        "allOf": [
-          {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "externalOrderNumber": {
+            "type": "string"
+          },
+          "externalUniqueOrderIdentifier": {
+            "type": "string"
+          },
+          "orderDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "numberOfLines": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfItems": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "express": {
+            "type": "boolean"
+          },
+          "preferredCarrier": {
+            "type": "string"
+          },
+          "preferredCarrierService": {
+            "type": "string"
+          },
+          "createdTimestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "anonimised": {
+            "type": "boolean"
+          },
+          "orderLines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderLineAPI"
+            }
+          },
+          "notes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "billingAddress": {
             "type": "object",
             "properties": {
-              "id": {
-                "type": "integer",
-                "format": "int32"
-              },
-              "orderNumber": {
+              "name": {
                 "type": "string"
               },
-              "clientUniqueOrderIdentifier": {
+              "companyName": {
                 "type": "string"
               },
-              "orderDate": {
-                "type": "string",
-                "format": "date"
-              },
-              "numberOfLines": {
-                "type": "integer",
-                "format": "int32"
-              },
-              "numberOfItems": {
-                "type": "integer",
-                "format": "int32"
-              },
-              "currency": {
+              "addressLine1": {
                 "type": "string"
               },
-              "express": {
-                "type": "boolean"
-              },
-              "preferredCarrier": {
+              "addressLine2": {
                 "type": "string"
               },
-              "preferredCarrierService": {
+              "city": {
                 "type": "string"
               },
-              "createdTimestamp": {
-                "type": "string",
-                "format": "date-time"
+              "region": {
+                "type": "string"
               },
-              "anonimised": {
-                "type": "boolean"
+              "postcode": {
+                "type": "string"
               },
-              "orderLines": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/OrderLineAPI"
-                }
+              "countryCode": {
+                "type": "string"
               }
             }
           },
-          {
-            "$ref": "#/components/schemas/OrderUpdateAPI"
-          }
-        ]
-      },
-      "OrderUpdateAPI": {
-        "type": "object",
-        "properties": {
-          "customerDetails": {
+          "deliveryAddress": {
             "type": "object",
             "properties": {
-              "emailAddress": {
+              "name": {
                 "type": "string"
               },
-              "telephone": {
+              "companyName": {
                 "type": "string"
               },
-              "deliveryAddress": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "companyName": {
-                    "type": "string"
-                  },
-                  "addressLine1": {
-                    "type": "string"
-                  },
-                  "addressLine2": {
-                    "type": "string"
-                  },
-                  "city": {
-                    "type": "string"
-                  },
-                  "region": {
-                    "type": "string"
-                  },
-                  "postcode": {
-                    "type": "string"
-                  },
-                  "countryCode": {
-                    "type": "string"
-                  }
-                }
+              "addressLine1": {
+                "type": "string"
+              },
+              "addressLine2": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "region": {
+                "type": "string"
+              },
+              "postcode": {
+                "type": "string"
+              },
+              "countryCode": {
+                "type": "string"
               }
             }
+          },
+          "emailAddress": {
+            "type": "string"
+          },
+          "telephone": {
+            "type": "string"
           },
           "deliveryInstructions": {
             "type": "string"
@@ -879,16 +897,27 @@
       "OrderLineAPI": {
         "type": "object",
         "properties": {
-          "uniqueOrderLineIdentifier": {
+          "externalUniqueLineIdentifier": {
             "type": "string"
           },
           "productId": {
             "type": "integer",
             "format": "int32"
           },
+          "sku": {
+            "type": "string"
+          },
           "quantity": {
             "type": "integer",
             "format": "int32"
+          },
+          "price": {
+            "type": "string",
+            "format": "double"
+          },
+          "originalPrice": {
+            "type": "string",
+            "format": "double"
           },
           "statuses": {
             "type": "array",
@@ -899,7 +928,9 @@
                   "type": "string",
                   "enum": [
                     "NEW",
-                    "IN PROGRESS",
+                    "ALLOCATED",
+                    "PICKED",
+                    "PACKED",
                     "DESPATCHED",
                     "CANCELLED"
                   ]
@@ -924,6 +955,9 @@
                     "trackingNumber": {
                       "type": "string"
                     },
+                    "uniqueParcelReference": {
+                      "type": "string"
+                    },
                     "cancellationReason": {
                       "type": "string"
                     },
@@ -937,16 +971,9 @@
           }
         }
       },
-      "OrderLineStatusUpdateAPI": {
+      "OrderLineStatusUpdateDTO": {
         "type": "object",
         "properties": {
-          "uniqueOrderLineIdentifier": {
-            "type": "string"
-          },
-          "productId": {
-            "type": "integer",
-            "format": "int32"
-          },
           "quantity": {
             "type": "integer",
             "format": "int32"
@@ -992,7 +1019,7 @@
           }
         }
       },
-      "StockSearchDTO": {
+      "StockDTO": {
         "type": "object",
         "properties": {
           "skus": {
@@ -1020,6 +1047,14 @@
           "sku": {
             "type": "string"
           },
+          "availableStock": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "allocated": {
+            "type": "integer",
+            "format": "int32"
+          },
           "physicalSaleableQuantity": {
             "type": "integer",
             "format": "int32"
@@ -1030,7 +1065,7 @@
           }
         }
       },
-      "StockTransactionsSearchDTO": {
+      "StockTransactionsDTO": {
         "type": "object",
         "properties": {
           "skus": {
@@ -1053,12 +1088,24 @@
           "dateCreatedTo": {
             "type": "string",
             "format": "date-time"
+          },
+          "transactionIdGreatherThan": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
       "StockTransactionAPI": {
         "type": "object",
         "properties": {
+          "transactionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "transactionDate": {
+            "type": "string",
+            "format": "date-time"
+          },
           "productId": {
             "type": "integer",
             "format": "int32"
@@ -1072,6 +1119,66 @@
               "WRITE-ON",
               "WRITE-OFF",
               "INTERNAL"
+            ]
+          },
+          "transactionReference": {
+            "type": "string"
+          },
+          "transactionCode": {
+            "type": "string",
+            "enum": [
+              "GXD - Allocate item for Xdock order",
+              "XDD - Item marked as over",
+              "GXR - Reversed allocated stock on PO",
+              "XDR - Reversed picked stock PO pick",
+              "PXD - Item picked on Xdock pick walk",
+              "XDC - Reversed allocated stock PO pi",
+              "SPS - Destroyed Packslip",
+              "GBO - Generated Bulk Order",
+              "BOS - Bulk Order Sale",
+              "GPS - Generated Packslip",
+              "REV - Reverse Bulk Order Pick",
+              "PIC - Stock Picked",
+              "RES - Reset Reserved Bulk Item",
+              "UNP - Reverting picked item",
+              "LTD - Located Delivered Stock",
+              "LBT - Located Bulk Transfer",
+              "STM - Stock Movement",
+              "XST - Cross Site Transfer",
+              "PIA - PI Adjustment",
+              "RDS - Requested Despatch",
+              "DRR - Duplicate Return Removal",
+              "RTS - Return to Supplier",
+              "OTR - Out to Refurb",
+              "SBA - Sell By Date Added",
+              "SBC - Sell By Date Changed",
+              "STT - Store Transfer",
+              "PRR - PI Reserve Reversal",
+              "PRS - PI Reserve",
+              "PIM - PI check Movement into temp",
+              "SIC - Stock Investigation Completed",
+              "SBM - Stock System Movement Bulk",
+              "ADJ - Manual Stock adjustment",
+              "STI - Stock Investigation",
+              "SCA - Stock Check Adjustment",
+              "WRO - Stock Write Off",
+              "QCC - QC Check",
+              "QCP - QC Passed",
+              "QCF - QC Failed",
+              "ADM - Accidental Damage",
+              "SHP - Shop Replen",
+              "SSM - Stock System Movement",
+              "BFR - Back From Refurb",
+              "RFB - Out For Refurb",
+              "IFR - In From Refurb Agent",
+              "CRP - Customer Replacement",
+              "DLC - Delivery Located & Confirmed",
+              "DLR - Counted/Located Delivery Reset",
+              "BTF - Bulk Transfer Delivery",
+              "DAJ - Delivery Adjustment",
+              "DEL - Delivery In",
+              "SAL - Sale",
+              "RET - Return"
             ]
           },
           "fromCategory": {
@@ -1090,9 +1197,12 @@
               "NON-SALEABLE"
             ]
           },
-          "quantityAdjusted": {
+          "quantity": {
             "type": "integer",
             "format": "int32"
+          },
+          "additionalInformation": {
+            "type": "object"
           }
         }
       }
