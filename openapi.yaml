@@ -1,0 +1,819 @@
+openapi: "3.0.9"
+info:
+  title: 'Whistl API for WMS integration'
+  description: ''
+  contact:
+    email: java@whistl.co.uk
+  license:
+    name: Whistl Private License
+    url: https://whistl.co.uk/PRIVATE-LICENSE.html
+  version: 1.0.0
+servers:
+- url: "/integration"
+security:
+- BearerAuth: []
+  OAuthCAS:
+  - read
+  - write
+tags:
+- name: Public Product REST
+  description: Product Services
+- name: Public Order REST
+  description: Order Services
+- name: Public Stock REST
+  description: Stock Services
+paths:
+  "/rest/api/public/product/{productId}":
+    get:
+      tags:
+      - Public Product REST
+      summary: Returns a product
+      operationId: getProduct
+      parameters:
+      - name: productId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Returns a product
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ProductAPI"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Abnormal Error
+    patch:
+      tags:
+      - Public Product REST
+      summary: Update a product
+      operationId: updateProduct
+      parameters:
+      - name: productId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ProductAPI"
+      responses:
+        '200':
+          description: Save or update a product
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ProductAPI"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Abnormal Error
+  "/rest/api/public/product":
+    post:
+      tags:
+      - Public Product REST
+      summary: Create a product
+      operationId: createProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ProductAPI"
+      responses:
+        '201':
+          description: Create a product
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ProductAPI"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Abnormal Error
+  "/rest/api/public/product/search":
+    post:
+      tags:
+      - Public Product REST
+      summary: Search product
+      operationId: searchProduct
+      parameters:
+      - name: size
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ProductSearchDTO"
+      responses:
+        '200':
+          description: Search for products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ProductAPI"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Abnormal Error
+  "/rest/api/public/order/{orderId}":
+    get:
+      tags:
+      - Public Order REST
+      summary: Returns an order
+      operationId: getOrder
+      parameters:
+      - name: orderId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Returns an order
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/OrderAPI"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Abnormal Error
+    patch:
+      tags:
+      - Public Order REST
+      summary: Update an order
+      operationId: updateOrder
+      parameters:
+      - name: orderId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/OrderAPI"
+      responses:
+        '200':
+          description: Save or update a product
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/OrderAPI"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Abnormal Error
+  "/rest/api/public/order":
+    post:
+      tags:
+      - Public Order REST
+      summary: Create an order
+      operationId: createOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/OrderAPI"
+      responses:
+        '201':
+          description: Create an order
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/OrderAPI"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Abnormal Error
+  "/rest/api/public/order/search":
+    post:
+      tags:
+      - Public Order REST
+      summary: Search order
+      operationId: searchOrder
+      parameters:
+      - name: size
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/OrderSearchDTO"
+      responses:
+        '200':
+          description: Search for orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/OrderAPI"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Abnormal Error
+  "/rest/api/public/order/{orderId}/orderLines/{uniqueOrderLineIdentifier}":
+    patch:
+        tags:
+        - Public Order REST
+        summary: Update an order line
+        operationId: updateOrderLine
+        parameters:
+          - name: orderId
+            in: path
+            required: true
+            schema:
+              type: string
+          - name: uniqueOrderLineIdentifier
+            in: path
+            required: true
+            schema:
+              type: string
+        requestBody:
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/OrderLineStatusUpdateDTO"
+        responses:
+          '200':
+            description: Save or update a product
+            content:
+              application/json:
+                schema:
+                  "$ref": "#/components/schemas/OrderLineAPI"
+          '400':
+            description: Bad Request
+          '401':
+            description: Unauthorized
+          '403':
+            description: Forbidden
+          '404':
+            description: Not Found
+          '500':
+            description: Abnormal Error
+  "/rest/api/public/stock/search":
+    post:
+      tags:
+      - Public Stock REST
+      summary: Search stock
+      operationId: searchStock
+      parameters:
+      - name: size
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/StockDTO"
+      responses:
+        '200':
+          description: Search for stock
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/StockAPI"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Abnormal Error
+  "/rest/api/public/stock-transactions/search":
+    post:
+      tags:
+      - Public Stock REST
+      summary: Search stock transactions
+      operationId: searchStockTransactions
+      parameters:
+      - name: size
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/StockTransactionsDTO"
+      responses:
+        '200':
+          description: Search for stock transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/StockTransactionAPI"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Abnormal Error
+components:
+  schemas:
+    ProductAPI:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+            type:
+              type: string
+              enum:
+              - ITEM
+              - KIT
+            sku:
+              type: string
+            creationTimestamp:
+              type: string
+              format: date-time
+        - "$ref": '#/components/schemas/ProductUpdateAPI'
+    ProductUpdateAPI:
+      type: object
+      properties:
+        shortDescription:
+          type: string
+        longDescription:
+          type: string
+        weightGms:
+          type: integer
+          format: int32
+        lengthCms:
+          type: integer
+          format: int32
+        widthCms:
+          type: integer
+          format: int32
+        heightCms:
+          type: integer
+          format: int32
+        perishable:
+          type: boolean
+        countryOfOrigin:
+          type: string
+        harmonisationCode:
+          type: string
+        costPriceGBP:
+          type: number
+          format: double
+        modifiedTimestamp:
+          type: string
+          format: date-time
+        barcodes:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        kitBreakdown:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ProductKitValueMetadataAPI"
+    ProductKitValueMetadataAPI:
+      type: object
+      properties:
+        productId: 
+          type: integer
+          format: int32
+        quantity:
+          type: integer
+          format: int32
+    ProductSearchDTO:
+      type: object
+      properties:
+        skus:
+          type: array
+          items:
+            type: string
+        barcodes:
+          type: array
+          items:
+            type: string
+        modifiedSince:
+          type: string
+          format: date-time
+    OrderAPI:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        externalOrderNumber:
+          type: string
+        externalUniqueOrderIdentifier:
+          type: string
+        orderDate:
+          type: string
+          format: date
+        numberOfLines:
+          type: integer
+          format: int32
+        numberOfItems:
+          type: integer
+          format: int32
+        currency:
+          type: string
+        express:
+          type: boolean
+        preferredCarrier:
+          type: string
+        preferredCarrierService:
+          type: string
+        createdTimestamp:
+          type: string
+          format: date-time
+        anonimised:
+          type: boolean
+        orderLines:
+          type: array
+          items:
+            "$ref": "#/components/schemas/OrderLineAPI"
+        notes:
+          type: array
+          items:
+            type: string
+        billingAddress:
+          type: object
+          properties:
+            name:
+              type: string
+            companyName:
+              type: string
+            addressLine1:
+              type: string
+            addressLine2:
+              type: string
+            city:
+              type: string
+            region:
+              type: string
+            postcode:
+              type: string
+            countryCode:
+              type: string
+        deliveryAddress:
+            type: object
+            properties:
+              name:
+                type: string
+              companyName:
+                type: string
+              addressLine1:
+                type: string
+              addressLine2:
+                type: string
+              city:
+                type: string
+              region:
+                type: string
+              postcode:
+                type: string
+              countryCode:
+                type: string
+        emailAddress:
+              type: string
+        telephone:
+          type: string
+        deliveryInstructions:
+          type: string
+        giftMessage:
+          type: string
+        modifiedTimestamp:
+          type: string
+          format: date-time
+    OrderLineAPI:
+      type: object
+      properties:
+        externalUniqueLineIdentifier:
+          type: string
+        productId:
+          type: integer
+          format: int32
+        sku:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+        price:
+          type: string
+          format: double
+        originalPrice:
+          type: string
+          format: double
+        statuses:
+          type: array
+          items:
+            type: object
+            properties:
+              status: 
+                type: string
+                enum:
+                - NEW
+                - ALLOCATED
+                - PICKED
+                - PACKED
+                - DESPATCHED
+                - CANCELLED
+              modifiedAt:
+                type: string
+                format: date-time
+              quantity:
+                type: integer
+                format: int32
+              additionalDetails:
+                type: object
+                properties:
+                  carrier:
+                    type: string
+                  carrierService:
+                    type: string
+                  trackingNumber:
+                    type: string
+                  uniqueParcelReference:
+                    type: string
+                  cancellationReason:
+                    type: string
+                  cancellationReference:
+                    type: string
+    OrderLineStatusUpdateDTO:
+      type: object
+      properties:
+        quantity:
+          type: integer
+          format: int32
+        newStatus:
+          type: string
+          enum:
+          - CANCELLED
+    OrderSearchDTO:
+      type: object
+      properties:
+        orderNumbers:
+          type: array
+          items:
+            type: string
+        clientUniqueOrderIdentifiers:
+          type: array
+          items:
+            type: string
+        despatchedDateFrom:
+          type: string
+          format: date-time
+        despatchedDateTo:
+          type: string
+          format: date-time
+        cancelledDateFrom:
+          type: string
+          format: date-time
+        cancelledDateTo:
+          type: string
+          format: date-time
+    StockDTO:
+        type: object
+        properties:
+          skus:
+            type: array
+            items:
+              type: string
+          productIds:
+            type: array
+            items:
+              type: integer
+              format: int32
+    StockAPI:
+        type: object
+        properties:
+          productId:
+            type: integer
+            format: int32
+          sku:
+            type: string
+          availableStock:
+            type: integer
+            format: int32
+          allocated:
+            type: integer
+            format: int32
+          physicalSaleableQuantity:
+            type: integer
+            format: int32
+          physicalNonSaleableQuantity:
+            type: integer
+            format: int32
+    StockTransactionsDTO:
+        type: object
+        properties:
+          skus:
+            type: array
+            items:
+              type: string
+          productIds:
+            type: array
+            items:
+              type: integer
+              format: int32
+          dateCreatedFrom:
+            type: string
+            format: date-time
+          dateCreatedTo:
+            type: string
+            format: date-time
+          transactionIdGreatherThan:
+            type: integer
+            format: int32
+    StockTransactionAPI:
+        type: object
+        properties:
+          transactionId:
+            type: integer
+            format: int32
+          transactionDate:
+            type: string
+            format: date-time
+          productId:
+            type: integer
+            format: int32
+          sku:
+            type: string
+          type:
+            type: string
+            enum: 
+            - WRITE-ON
+            - WRITE-OFF
+            - INTERNAL
+          transactionReference:
+            type: string
+          transactionCode:
+            type: string
+            enum:
+              - "GXD - Allocate item for Xdock order"
+              - "XDD - Item marked as over"
+              - "GXR - Reversed allocated stock on PO"
+              - "XDR - Reversed picked stock PO pick"
+              - "PXD - Item picked on Xdock pick walk"
+              - "XDC - Reversed allocated stock PO pi"
+              - "SPS - Destroyed Packslip"
+              - "GBO - Generated Bulk Order"
+              - "BOS - Bulk Order Sale"
+              - "GPS - Generated Packslip"
+              - "REV - Reverse Bulk Order Pick"
+              - "PIC - Stock Picked"
+              - "RES - Reset Reserved Bulk Item"
+              - "UNP - Reverting picked item"
+              - "LTD - Located Delivered Stock"
+              - "LBT - Located Bulk Transfer"
+              - "STM - Stock Movement"
+              - "XST - Cross Site Transfer"
+              - "PIA - PI Adjustment"
+              - "RDS - Requested Despatch"
+              - "DRR - Duplicate Return Removal"
+              - "RTS - Return to Supplier"
+              - "OTR - Out to Refurb"
+              - "SBA - Sell By Date Added"
+              - "SBC - Sell By Date Changed"
+              - "STT - Store Transfer"
+              - "PRR - PI Reserve Reversal"
+              - "PRS - PI Reserve"
+              - "PIM - PI check Movement into temp"
+              - "SIC - Stock Investigation Completed"
+              - "SBM - Stock System Movement Bulk"
+              - "ADJ - Manual Stock adjustment"
+              - "STI - Stock Investigation"
+              - "SCA - Stock Check Adjustment"
+              - "WRO - Stock Write Off"
+              - "QCC - QC Check"
+              - "QCP - QC Passed"
+              - "QCF - QC Failed"
+              - "ADM - Accidental Damage"
+              - "SHP - Shop Replen"
+              - "SSM - Stock System Movement"
+              - "BFR - Back From Refurb"
+              - "RFB - Out For Refurb"
+              - "IFR - In From Refurb Agent"
+              - "CRP - Customer Replacement"
+              - "DLC - Delivery Located & Confirmed"
+              - "DLR - Counted/Located Delivery Reset"
+              - "BTF - Bulk Transfer Delivery"
+              - "DAJ - Delivery Adjustment"
+              - "DEL - Delivery In"
+              - "SAL - Sale"
+              - "RET - Return"
+          fromCategory:
+            type: string
+            enum: 
+            - '-'
+            - SALEABLE
+            - NON-SALEABLE
+          toCategory:
+            type: string
+            enum: 
+            - '-'
+            - SALEABLE
+            - NON-SALEABLE
+          quantity:
+            type: integer
+            format: int32
+          additionalInformation:
+            type: object
+  responses:
+    UnauthorizedError:
+      description: JWT Bearer Token is missing or invalid
+  securitySchemes:
+    BearerAuth:
+      type: http
+      description: JWT Bearer Token Auth
+      scheme: bearer
+      bearerFormat: JWT
+    OAuthCAS:
+      type: oauth2
+      description: This application requires OAuth 2.0 authentication to CAS
+      flows:
+        implicit:
+          authorizationUrl: "/oauth"
+          scopes:
+            name: "o4b"
